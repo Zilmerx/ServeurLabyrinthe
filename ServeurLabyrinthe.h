@@ -8,6 +8,7 @@
 
 #include <winsock2.h>
 #include <WS2tcpip.h> // pour inet_pton()
+#include "Labyrinthe.h"
 
 #pragma comment(lib,"Ws2_32.lib")
 
@@ -23,6 +24,8 @@ class ServeurLabyrinthe
 
 	socket_t m_socketServeur;
 	socket_t m_socketClient;
+
+   Labyrinthe m_Carte{ 0.3, 40, 20 };
 public:
 
 	ServeurLabyrinthe();

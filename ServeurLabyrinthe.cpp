@@ -1,9 +1,10 @@
-#include "ServeurLabyrinthe.h"
 
+#include "ServeurLabyrinthe.h"
 
 ServeurLabyrinthe::ServeurLabyrinthe()
 	: m_socketServeur{ INVALID_SOCKET },
-	m_socketClient{ INVALID_SOCKET }
+   m_socketClient{ INVALID_SOCKET },
+   m_Carte{ 0.3, 40, 20 }
 {
 	const long VERSION_DEMANDEE = MAKEWORD(2, 2);
 	WSAData configWinsock;
@@ -21,6 +22,8 @@ ServeurLabyrinthe::~ServeurLabyrinthe()
 
 void ServeurLabyrinthe::Initialize(int port)
 {
+   m_Carte.generer();
+
 	while (est_invalide(m_socketServeur))
 	{
 		m_socketServeur = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -44,22 +47,29 @@ void ServeurLabyrinthe::Start()
 		switch (message[0])
 		{
 			case DROITE: 
-				// Try move droite.
-				envoyer("DROITE");
+            m_Carte.tryMoveRight();
 				break;
 			case GAUCHE:
-				// Try move gauche
-				envoyer("GAUCHE");
+            m_Carte.tryMoveLeft();
 				break;
 			case AVANCER:
-				// Try move avant
-				envoyer("AVANCER");
+            //m_Carte.tryMoveAvancer();
 				break;
 			default:
 				break;
 		}
 
 		// Envoyer nouveau vecteur.
+      std::vector<std::vector<char>> vector = m_Carte.getVec();
+
+      for (int x = 0; x < m_Carte.width(); ++x)
+      {
+         std::string s(vector[x].begin(), vector[x].end());
+
+         envoyer(s);
+      }
+
+      envoyer("@");
 	}
 }
 
