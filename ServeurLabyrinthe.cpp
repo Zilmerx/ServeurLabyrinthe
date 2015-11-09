@@ -62,6 +62,23 @@ void ServeurLabyrinthe::Start()
 		// Envoyer nouveau vecteur.
       std::vector<std::vector<char>> vector = m_Carte.getVec();
 
+	  for (std::vector<char>& vec : vector)
+	  {
+		  for (char& c : vec)
+		  {
+			  if (c == -37)
+			  {
+				  c = 'a';
+			  }
+			  if (c == 1)
+			  {
+				  c = 'X';
+			  }
+		  }
+	  }
+
+
+
       for (int x = 0; x < m_Carte.width(); ++x)
       {
          std::string s(vector[x].begin(), vector[x].end());
