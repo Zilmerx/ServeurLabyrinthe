@@ -20,12 +20,14 @@ class ServeurLabyrinthe
 	static const char DELIMITEUR_FIN = '#';
 	static const char DROITE = 'd';
 	static const char GAUCHE = 'g';
-	static const char AVANCER = '1';
+   static const char HAUT = 'h';
+   static const char BAS = 'b';
+   static const char FINI = '*';
 
 	socket_t m_socketServeur;
 	socket_t m_socketClient;
 
-   Labyrinthe m_Carte{ 0.3, 40, 20 };
+   Labyrinthe m_Carte;
 public:
 
 	ServeurLabyrinthe();

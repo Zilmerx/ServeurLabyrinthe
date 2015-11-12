@@ -4,7 +4,7 @@
 ServeurLabyrinthe::ServeurLabyrinthe()
 	: m_socketServeur{ INVALID_SOCKET },
    m_socketClient{ INVALID_SOCKET },
-   m_Carte{ 0.3, 40, 20 }
+   m_Carte{ 0.1, 40, 20 }
 {
 	const long VERSION_DEMANDEE = MAKEWORD(2, 2);
 	WSAData configWinsock;
@@ -52,41 +52,34 @@ void ServeurLabyrinthe::Start()
 			case GAUCHE:
             m_Carte.tryMoveLeft();
 				break;
-			case AVANCER:
-            //m_Carte.tryMoveAvancer();
+			case HAUT:
+            m_Carte.tryMoveUp();
+            break;
+         case BAS:
+            m_Carte.tryMoveDown();
 				break;
 			default:
 				break;
 		}
 
-		// Envoyer nouveau vecteur.
-      std::vector<std::vector<char>> vector = m_Carte.getVec();
-
-	  for (std::vector<char>& vec : vector)
-	  {
-		  for (char& c : vec)
-		  {
-			  if (c == -37)
-			  {
-				  c = 'a';
-			  }
-			  if (c == 1)
-			  {
-				  c = 'X';
-			  }
-		  }
-	  }
-
-
-
-      for (int x = 0; x < m_Carte.width(); ++x)
+      if (m_Carte.is_PartieFinie())
       {
-         std::string s(vector[x].begin(), vector[x].end());
-
-         envoyer(s);
+         envoyer("*");
       }
+      else
+      {
+         // Envoyer nouveau vecteur.
+         std::vector<std::vector<char>> vector = m_Carte.getVec();
 
-      envoyer("@");
+         for (int y = 0; y < m_Carte.height(); ++y)
+         {
+            std::string s(vector[y].begin(), vector[y].end());
+
+            envoyer(s);
+         }
+
+         envoyer("@");
+      }
 	}
 }
 
